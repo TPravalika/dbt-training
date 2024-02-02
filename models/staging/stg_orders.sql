@@ -1,25 +1,24 @@
---select * ,ORDERSELLINGPRICE-ORDERCOSTPRICE as ordersprofit
---from {{ ref('raw_orders') }}
 select
-o.orderid,
-o.orderdate,
-o.shipdate,
-o.shipmode,
-o.ordercostprice,
-o.ORDERSELLINGPRICE,
-o.ORDERSELLINGPRICE-o.ORDERCOSTPRICE as ordersprofit,
-p.productid,
-p.CATEGORY,
-p.PRODUCTNAME,
-p.SUBCATEGORY,
-c.CUSTOMERID,
-c.CUSTOMERNAME,
-c.SEGMENT,
-c.COUNTRY,
-c.STATE
-from
- {{ ref('raw_orders') }}  o 
-  left join {{ ref('raw_product') }}  p 
-   on o.productid =p.productid
-   left join {{ ref('raw_customer') }}  c 
-   on c.customerid =c.customerid
+--from raw_orders
+orderid,
+orderdate,
+shipdate,
+shipmode,
+o.customerid,
+o.productid,
+ordersellingprice,
+ordercostprice,
+--from raw_customer
+customername,
+segment,
+country,
+--from raw_product
+category,
+productname,
+subcategory,
+ordersellingprice - ordercostprice as orderprofit
+from {{ ref('raw_orders') }} as o
+left join {{ ref('raw_customer') }} as c
+on o.customerid = c.customerid
+left join {{ ref('raw_product') }} as p
+on o.productid = p.productid
